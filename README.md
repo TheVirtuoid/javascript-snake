@@ -9,6 +9,11 @@ You are free to use this code any way you see fit. Clone the repository and have
 
 You can see the live video here: [JavaScript Snake Game](https://youtu.be/ca-aRS7FN-A)
 
+## Running the game
+
+All you have to do is launch a static HTTP server in the home directory and navigate to ```snake.html```. I
+use [http-server](https://www.npmjs.com/package/http-server), but any static server will do.
+
 ## The Branches
 
 
