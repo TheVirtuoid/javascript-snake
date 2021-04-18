@@ -5,6 +5,13 @@ The code used in the live broadcast of Boring JavaScript's Snake game
 
 You are free to use this code any way you see fit. Clone the repository and have fun!
 
+## The Video
+
+You can see the live video here: [JavaScript Snake Game](https://youtu.be/ca-aRS7FN-A)
+
+## The Branches
+
+
 ### The ```orginal``` branch
 
 This branch was the result of our Live Broadcast on April 15th, 2021. This is considered Part 1
