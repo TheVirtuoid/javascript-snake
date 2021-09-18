@@ -1,38 +1,57 @@
-const directionMap = new Map();
-directionMap.set('ArrowUp', 'N');
-directionMap.set('ArrowDown', 'S');
-directionMap.set('ArrowRight', 'E');
-directionMap.set('ArrowLeft', 'W');
-directionMap.set('KeyW', 'N');
-directionMap.set('KeyD', 'E');
-directionMap.set('KeyS', 'S');
-directionMap.set('KeyA', 'W');
+import Mapping from "./Mapping.js";
 
 function processKeyboard(event) {
-	const direction = directionMap.get(event.code);
-	publish.bind(this)('move', direction);
+	publish.bind(this)('move', Mapping.getDirection(event.code));
 }
 
 function publish(command, value) {
-	const { subscribers } = privateVariables.get(this);
-	if (subscribers.has(command) && value) {
+	if (this.#subscribers.has(command) && value) {
 		console.log(command, value);
-		subscribers.get(command).forEach( (callback) => callback(value));
+		this.#subscribers.get(command).forEach( (callback) => callback(value));
 	}
 }
 
 export default class Keyboard {
 
-	subscribers = [];
+	#subscribers = new Map();
+	#processKeyboardBinding;
 
-	constructor() {}
+	constructor() {
+		this.#processKeyboardBinding = processKeyboard.bind(this);
+	}
 
 	start() {
-		document.addEventListener('keyup', processKeyboard.bind(this));
+		document.addEventListener('keyup', this.#processKeyboardBinding);
 	}
 
 	stop() {
+		document.removeEventListener('keyup', this.#processKeyboardBinding);
+	}
 
+	on(action, callback) {
+		if (this.#subscribers.length === 0) {
+			this.start();
+		}
+		if (!this.#subscribers.has(action)) {
+			this.#subscribers.set(action, []);
+		}
+		const subscriptions = this.#subscribers.get(action);
+		subscriptions.push(callback);
+		this.#subscribers.set(action, subscriptions);
+	}
+
+	off(action, callback) {
+		if (this.#subscribers.has(action)) {
+			const subscriptions = this.#subscribers.get(action).filter( subscription => subscription !== callback );
+			if (subscriptions.length === 0) {
+				this.#subscribers.delete(action);
+				if (this.#subscribers.length === 0) {
+					this.stop();
+				}
+			} else {
+				this.#subscribers.set(action, subscriptions);
+			}
+		}
 	}
 
 	onChange() {
