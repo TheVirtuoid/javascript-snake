@@ -2,18 +2,6 @@ import Board from "./Board.js";
 import Scoreboard from "./Scoreboard.js";
 import Input from "./Input.js";
 
-/*
-const directionMap = new Map();
-directionMap.set('ArrowUp', 'N');
-directionMap.set('ArrowDown', 'S');
-directionMap.set('ArrowRight', 'E');
-directionMap.set('ArrowLeft', 'W');
-directionMap.set('KeyW', 'N');
-directionMap.set('KeyD', 'E');
-directionMap.set('KeyS', 'S');
-directionMap.set('KeyA', 'W');
-*/
-
 export default class Game {
 	board;
 	scoreboard;
@@ -28,7 +16,7 @@ export default class Game {
 		this.input = new Input();
 		this.firstKey = false;
 		// document.addEventListener('keyup', this.processKeyStroke.bind(this));
-		this.input.on('move', this.processKeyStroke.bind(this));
+		this.input.on('move', this.processMove.bind(this));
 	}
 
 	initialize(x, y, direction, length) {
@@ -37,11 +25,9 @@ export default class Game {
 		this.scoreboard.reset();
 	}
 
-	processKeyStroke(event) {
-		// const direction = directionMap.get(event.code);
+	processMove(event) {
 		const direction = event;
 		this.firstKey = direction || this.firstKey;
-		// this.board.setDirection(directionMap.get(event.code));
 		this.board.setDirection(direction);
 	}
 
@@ -58,7 +44,7 @@ export default class Game {
 
 	stop () {
 		clearInterval(this.timer);
-		this.input.gameRunning = false;
+		this.input.stop();
 		this.scoreboard.endGame();
 		this.scoreboard.restart.addEventListener('click', this.restart.bind(this), { once: true });
 	}
@@ -71,6 +57,7 @@ export default class Game {
 	}
 
 	go () {
+		this.input.start();
 		this.timer = setInterval(this.moveSnake.bind(this), 100);
 	}
 

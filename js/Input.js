@@ -41,9 +41,8 @@ function publish(command, value) {
 
 function onGamepadConnected(event) {
 	this.gamepadIndex = event.gamepad.index;
-	this.gameRunning = true;
 	this.lastDirection = '0000';
-	requestAnimationFrame(processDPad.bind(this));
+	this.start();
 }
 
 export default class Input {
@@ -67,5 +66,14 @@ export default class Input {
 			subscribers.set(command, callbacks);
 			privateVariables.set(this, { subscribers });
 		}
+	}
+
+	start() {
+		this.gameRunning = true;
+		requestAnimationFrame(processDPad.bind(this));
+	}
+
+	stop() {
+		this.gameRunning = false;
 	}
 }
